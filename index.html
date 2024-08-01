@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Style Input with Virtual Keyboard</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 0px;
+        }
+        .input-box {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            box-shadow: 0 0 3px 0 rgb(0, 0, 0);
+            border-radius: 10px;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-color: white;
+            transition: scale 0.1s, box-shadow 0.1s;
+        }
+        .input-box.focused {
+            scale: 1.1;
+            box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.685);
+        }
+        .keyboard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 606px;
+            min-width: 335px;
+        }
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        .key {
+            width: 8.5%;
+            height: 52px;
+            margin: 5px 2px;
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ccc;
+            border-radius: 7px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 18px;
+            transition: background-color 0.1s, scale 0.1s;
+        }
+        .key:active {
+            background-color: #bbb;
+            scale: 0.9;
+        }
+        .key.wide {
+            width: 60px;
+        }
+
+        .hid {
+            display: none;
+        }
+
+        .bsicon {
+            height: 50%;
+            width: 50%;        
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="input-container">
+        <div class="input-row" data-row="0">
+            <div class="input-box" data-index="0"></div>
+            <div class="input-box" data-index="1"></div>
+            <div class="input-box" data-index="2"></div>
+            <div class="input-box" data-index="3"></div>
+            <div class="input-box" data-index="4"></div>
+            <div class="input-box hid" data-index="5"></div>
+        </div>
+        <div class="input-row" data-row="1">
+            <div class="input-box" data-index="0"></div>
+            <div class="input-box" data-index="1"></div>
+            <div class="input-box" data-index="2"></div>
+            <div class="input-box" data-index="3"></div>
+            <div class="input-box" data-index="4"></div>
+            <div class="input-box hid" data-index="5"></div>
+        </div>
+        <div class="input-row" data-row="2">
+            <div class="input-box" data-index="0"></div>
+            <div class="input-box" data-index="1"></div>
+            <div class="input-box" data-index="2"></div>
+            <div class="input-box" data-index="3"></div>
+            <div class="input-box" data-index="4"></div>
+            <div class="input-box hid" data-index="5"></div>
+        </div>
+        <div class="input-row" data-row="3">
+            <div class="input-box" data-index="0"></div>
+            <div class="input-box" data-index="1"></div>
+            <div class="input-box" data-index="2"></div>
+            <div class="input-box" data-index="3"></div>
+            <div class="input-box" data-index="4"></div>
+            <div class="input-box hid" data-index="5"></div>
+        </div>
+        <div class="input-row" data-row="4">
+            <div class="input-box" data-index="0"></div>
+            <div class="input-box" data-index="1"></div>
+            <div class="input-box" data-index="2"></div>
+            <div class="input-box" data-index="3"></div>
+            <div class="input-box" data-index="4"></div>
+            <div class="input-box hid" data-index="5"></div>
+        </div>
+        <div class="input-row" data-row="5">
+            <div class="input-box" data-index="0"></div>
+            <div class="input-box" data-index="1"></div>
+            <div class="input-box" data-index="2"></div>
+            <div class="input-box" data-index="3"></div>
+            <div class="input-box" data-index="4"></div>
+            <div class="input-box hid" data-index="5"></div>
+        </div>
+    </div>
+
+    <div class="keyboard">
+        <div class="keyboard-row">
+            <div class="key">Q</div>
+            <div class="key">W</div>
+            <div class="key">E</div>
+            <div class="key">R</div>
+            <div class="key">T</div>
+            <div class="key">Y</div>
+            <div class="key">U</div>
+            <div class="key">I</div>
+            <div class="key">O</div>
+            <div class="key">P</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="key">A</div>
+            <div class="key">S</div>
+            <div class="key">D</div>
+            <div class="key">F</div>
+            <div class="key">G</div>
+            <div class="key">H</div>
+            <div class="key">J</div>
+            <div class="key">K</div>
+            <div class="key">L</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="key wide enter-key">Enter</div>
+            <div class="key">Z</div>
+            <div class="key">X</div>
+            <div class="key">C</div>
+            <div class="key">V</div>
+            <div class="key">B</div>
+            <div class="key">N</div>
+            <div class="key">M</div>
+            <div class="key wide backspace-key"><!--<img class="bsicon" src="backspace.svg" alt="Backspace">--><div class="bsicon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M576 64H205.26A63.97 63.97 0 0 0 160 82.75L9.37 233.37c-12.5 12.5-12.5 32.76 0 45.25L160 429.25c12 12 28.28 18.75 45.25 18.75H576c35.35 0 64-28.65 64-64V128c0-35.35-28.65-64-64-64zm-84.69 254.06c6.25 6.25 6.25 16.38 0 22.63l-22.62 22.62c-6.25 6.25-16.38 6.25-22.63 0L384 301.25l-62.06 62.06c-6.25 6.25-16.38 6.25-22.63 0l-22.62-22.62c-6.25-6.25-6.25-16.38 0-22.63L338.75 256l-62.06-62.06c-6.25-6.25-6.25-16.38 0-22.63l22.62-22.62c6.25-6.25 16.38-6.25 22.63 0L384 210.75l62.06-62.06c6.25-6.25 16.38-6.25 22.63 0l22.62 22.62c6.25 6.25 6.25 16.38 0 22.63L429.25 256l62.06 62.06z"/></svg>
+            </div></div>
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const rows = document.querySelectorAll('.input-row');
+    let currentRowIndex = 0;
+    let currentIndex = 0;
+
+    function updateFocus() {
+        rows.forEach((row, rowIndex) => {
+            const boxes = row.querySelectorAll('.input-box');
+            boxes.forEach((box, boxIndex) => {
+                if (rowIndex === currentRowIndex && boxIndex === currentIndex) {
+                    box.classList.add('focused');
+                } else {
+                    box.classList.remove('focused');
+                }
+            });
+        });
+    }
+
+    function handleInput(key) {
+        const isLetter = /^[a-zA-Z]$/.test(key);
+        const currentRow = rows[currentRowIndex];
+        const boxes = currentRow.querySelectorAll('.input-box');
+
+        if (isLetter) {
+            if (currentIndex < boxes.length - 1) {
+                boxes[currentIndex].textContent = key.toUpperCase();
+                currentIndex++;
+                updateFocus();
+            }
+        } else if (key === 'Backspace') {
+            if (currentIndex > 0) {
+                currentIndex--;
+                boxes[currentIndex].textContent = '';
+                updateFocus();
+            } else if (currentIndex === 0 && boxes[currentIndex].textContent !== '') {
+                boxes[currentIndex].textContent = '';
+            }
+        } else if (key === 'Enter') {
+            if (currentRowIndex < rows.length - 1 && currentIndex === boxes.length - 1) {
+                currentRowIndex++;
+                currentIndex = 0;
+                updateFocus();
+            }
+        }
+    }
+
+    rows.forEach((row, rowIndex) => {
+        const boxes = row.querySelectorAll('.input-box');
+        boxes.forEach(box => {
+            box.addEventListener('click', () => {
+                // Only set focus if it's within the current row and the next expected input box
+                if (rowIndex === currentRowIndex && parseInt(box.getAttribute('data-index')) === currentIndex) {
+                    currentIndex = parseInt(box.getAttribute('data-index'));
+                    updateFocus();
+                }
+            });
+        });
+    });
+
+    document.addEventListener('keydown', (event) => {
+        handleInput(event.key);
+    });
+
+    document.querySelectorAll('.key').forEach(key => {
+        key.addEventListener('click', () => {
+            const keyText = key.textContent.trim();
+            if (key.classList.contains('backspace-key')) {
+                handleInput('Backspace');
+            } else if (key.classList.contains('enter-key')) {
+                handleInput('Enter');
+            } else {
+                handleInput(keyText);
+            }
+        });
+    });
+
+    updateFocus();
+});
+    </script>
+</body>
+</html>
