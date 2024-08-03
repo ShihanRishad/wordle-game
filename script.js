@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    salertThing = document.querySelector(".salert");
     function salert(Thing, waittime) {
         salertThing.style.opacity = "1";
         salertThing.textContent = Thing;
@@ -54,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const boxes = currentRow.querySelectorAll('.input-box');
 
         if (isLetter) {
-            if (currentIndex < boxes.length - 1) {
+            if (currentIndex < boxes.length) {
                 boxes[currentIndex].textContent = key.toUpperCase();
                 currentIndex++;
                 updateFocus();
@@ -70,6 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (key === 'Enter') {
             if (currentIndex === boxes.length - 1) {
                 checkGuess();
+            } else {
+                salert("Not enough letters!", 1500)
             }
         }
     }
@@ -176,11 +179,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const keyText = key.textContent.trim();
             if (key.classList.contains('enter-key')) {
                 handleInput('Enter');
-            } else {
+             } else if (key.classList.contains('backspace-key')) {
+                    handleInput('Backspace');
+                } else {
                 handleInput(keyText);
             }
         });
     });
+
+
 
     loadWordList();
     updateFocus();
