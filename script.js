@@ -1,12 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const rows = document.querySelectorAll('.input-row');
-    let currentRowIndex = 0;
-    let currentIndex = 0;
-    const maxGuesses = 6;
-    let wordList = [];
-    let secretWord = '';
-    var salertThing = document.querySelector(".salert");
-
     function salert(Thing, waittime) {
         salertThing.style.opacity = "1";
         salertThing.textContent = Thing;
@@ -16,6 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }, waittime)
     }
+
+    const rows = document.querySelectorAll('.input-row');
+    let currentRowIndex = 0;
+    let currentIndex = 0;
+    const maxGuesses = 6;
+    let wordList = [];
+    let secretWord = '';
 
     function loadWordList() {
         fetch('https://shihanrishad.github.io/wordle-game/wordlist.txt')
@@ -75,6 +74,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function updateKeyboardClass(letter, newClass) {
+        const keyElement = document.querySelector(`.key[data-key="${letter}"]`);
+        if (keyElement) {
+            const currentClass = keyElement.getAttribute('data-class');
+            if (currentClass !== 'correct') {
+                if (currentClass === 'present' && newClass === 'correct') {
+                    keyElement.classList.remove('present');
+                    keyElement.classList.add('correct');
+                    keyElement.setAttribute('data-class', 'correct');
+                } else if (currentClass === 'absent' && (newClass === 'present' || newClass === 'correct')) {
+                    keyElement.classList.remove('absent');
+                    keyElement.classList.add(newClass);
+                    keyElement.setAttribute('data-class', newClass);
+                } else if (!currentClass) {
+                    keyElement.classList.add(newClass);
+                    keyElement.setAttribute('data-class', newClass);
+                }
+            }
+        }
+    }
+
     function checkGuess() {
         const currentRow = rows[currentRowIndex];
         const boxes = currentRow.querySelectorAll('.input-box');
@@ -84,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (guess.length < secretWord.length) return;
 
         if (!isValidWord(guess)) {
-            salert('Invalid word! Please try again.', 1300);
+            salert('Invalid word! Please try again.', 2900);
             return;
         }
 
@@ -92,45 +112,45 @@ document.addEventListener('DOMContentLoaded', () => {
         const secretArray = secretWord.split('');
         const matched = new Array(secretArray.length).fill(false);
 
-        // Feadback giving: find the exact matches
-
+        // First pass: find exact matches
         boxes.forEach((box, index) => {
             if (guessArray[index] === secretArray[index]) {
-                box.style.backgroundColor = "green"; // Correct letter in the correct position
-             //   box.classList.add("green");
+                box.classList.add('correct'); // Correct letter in the correct position
                 matched[index] = true;
                 guessArray[index] = null; // Mark this letter as matched
+                updateKeyboardClass(secretArray[index], 'correct');
             }
         });
 
-        // Then find others
+        // Second pass: find partial matches
         boxes.forEach((box, index) => {
-            if (box.style.backgroundColor !== "green" && guessArray[index] !== null) {
+            if (!box.classList.contains('correct') && guessArray[index] !== null) {
                 const letterIndex = secretArray.indexOf(guessArray[index]);
                 if (letterIndex !== -1 && !matched[letterIndex]) {
-                    box.style.backgroundColor = "yellow"; // Correct letter in the wrong position
-                //   box.classList.add("yellow");
+                    box.classList.add('present'); // Correct letter in the wrong position
                     matched[letterIndex] = true;
+                    updateKeyboardClass(guessArray[index], 'present');
                 } else {
-                    box.style.backgroundColor = "gray"; // Incorrect letter
-                   // box.classList.add("grey");
+                    box.classList.add('absent'); // Incorrect letter
+                    updateKeyboardClass(guessArray[index], 'absent');
                 }
-            } else if (box.style.backgroundColor !== "green") {
-                box.style.backgroundColor = "gray"; // Incorrect letter
+            } else if (!box.classList.contains('correct')) {
+                box.classList.add('absent'); // Incorrect letter
+                updateKeyboardClass(guessArray[index], 'absent');
             }
         });
 
         // Check if the guess is correct
         if (guess === secretWord) {
-            salert("Congratulations! You've guessed the word!", 3000);
-            // Reset
+            salert("Congratulations! You've guessed the word!", 2900);
+            // Reset or end game logic
         } else if (currentRowIndex < maxGuesses - 1) {
             currentRowIndex++;
             currentIndex = 0;
             updateFocus();
         } else {
-            salert("You lost! The answer was " + secretWord, 2000);
-            // Reset or do nothing
+            salert("Game over! The word was " + secretWord, 2900);
+            // Reset or end game logic
         }
     }
 
