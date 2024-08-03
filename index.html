@@ -90,10 +90,37 @@
             width: 50%;        
         }
 
+        .salert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            translate: -50%;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.603);
+            color: white;
+            border-radius: 20px;
+            opacity: 0;
+            z-index: 10;
+            transition: opacity 0.3s;
+        }
+
+        .yellow {
+            background-color: yellow;
+        }
+
+        .grey {
+            background-color: grey;
+        }
+
+        .green {
+            background-color: green;
+        }
+
         
     </style>
 </head>
 <body>
+    <div class="salert">Defult Text</div>
     <div class="input-container">
         <div class="input-row" data-row="0">
             <div class="input-box" data-index="0"></div>
@@ -184,85 +211,9 @@
         </div>
     </div>
 
-    <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const rows = document.querySelectorAll('.input-row');
-    let currentRowIndex = 0;
-    let currentIndex = 0;
+    <script src="script.js">
 
-    function updateFocus() {
-        rows.forEach((row, rowIndex) => {
-            const boxes = row.querySelectorAll('.input-box');
-            boxes.forEach((box, boxIndex) => {
-                if (rowIndex === currentRowIndex && boxIndex === currentIndex) {
-                    box.classList.add('focused');
-                } else {
-                    box.classList.remove('focused');
-                }
-            });
-        });
-    }
 
-    function handleInput(key) {
-        const isLetter = /^[a-zA-Z]$/.test(key);
-        const currentRow = rows[currentRowIndex];
-        const boxes = currentRow.querySelectorAll('.input-box');
-
-        if (isLetter) {
-            if (currentIndex < boxes.length - 1) {
-                boxes[currentIndex].textContent = key.toUpperCase();
-                currentIndex++;
-                updateFocus();
-            }
-        } else if (key === 'Backspace') {
-            if (currentIndex > 0) {
-                currentIndex--;
-                boxes[currentIndex].textContent = '';
-                updateFocus();
-            } else if (currentIndex === 0 && boxes[currentIndex].textContent !== '') {
-                boxes[currentIndex].textContent = '';
-            }
-        } else if (key === 'Enter') {
-            if (currentRowIndex < rows.length - 1 && currentIndex === boxes.length - 1) {
-                currentRowIndex++;
-                currentIndex = 0;
-                updateFocus();
-            }
-        }
-    }
-
-    rows.forEach((row, rowIndex) => {
-        const boxes = row.querySelectorAll('.input-box');
-        boxes.forEach(box => {
-            box.addEventListener('click', () => {
-                // Only set focus if it's within the current row and the next expected input box
-                if (rowIndex === currentRowIndex && parseInt(box.getAttribute('data-index')) === currentIndex) {
-                    currentIndex = parseInt(box.getAttribute('data-index'));
-                    updateFocus();
-                }
-            });
-        });
-    });
-
-    document.addEventListener('keydown', (event) => {
-        handleInput(event.key);
-    });
-
-    document.querySelectorAll('.key').forEach(key => {
-        key.addEventListener('click', () => {
-            const keyText = key.textContent.trim();
-            if (key.classList.contains('backspace-key')) {
-                handleInput('Backspace');
-            } else if (key.classList.contains('enter-key')) {
-                handleInput('Enter');
-            } else {
-                handleInput(keyText);
-            }
-        });
-    });
-
-    updateFocus();
-});
     </script>
 </body>
 </html>
