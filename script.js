@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadWordList() {
-        fetch('wordlist.txt')
+        fetch('https://shihanrishad.github.io/wordle-game/wordlist.txt')
             .then(response => response.text())
             .then(data => {
                 wordList = data.split('\n').map(word => word.trim().toUpperCase());
