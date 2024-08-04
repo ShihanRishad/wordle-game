@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordle Game</title>
@@ -21,6 +24,9 @@
             flex-direction: column;
             margin-bottom: 20px;
             margin-top: 30px;
+            font-family: "Roboto", Arial, sans-serif;
+            font-weight: 500;
+            font-style: normal;
         }
 
         .input-row {
@@ -38,7 +44,7 @@
             align-items: center;
             font-size: 24px;
             background-color: white;
-            transition: scale 0.1s, box-shadow 0.1s;
+            transition: scale 0.1s, box-shadow 0.1s, height 0.2s, width 0.2s, background-color 0.4s;
         }
         .input-box.focused {
             scale: 1.1;
@@ -98,7 +104,7 @@
             padding: 15px;
             background-color: rgba(0, 0, 0, 0.603);
             color: white;
-            border-radius: 20px;
+            border-radius: 200px;
             opacity: 0;
             z-index: 10;
             pointer-events: none;
@@ -121,7 +127,7 @@
         }
         
         .key.correct {
-            background-color: #6aaa64;
+            background-color: #33912a;
             color: white;
         }
         
@@ -135,6 +141,24 @@
             color: white;
         }
 
+        @keyframes pulse {
+            0% {
+                scale: 1;
+            }
+             50% {
+                scale: 1.2;
+                box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.664);
+            }
+            100% {
+                scale: 1;
+            }
+        }
+
+        .enter_icon {
+            height: 50%;
+            width: 50%;
+        }
+
 
         
     </style>
@@ -142,7 +166,7 @@
 <body>
     <div class="salert">Defult Text</div>
     <div class="input-container">
-        <div class="input-row" data-row="0">
+        <div class="input-row one" data-row="0">
             <div class="input-box" data-index="0"></div>
             <div class="input-box" data-index="1"></div>
             <div class="input-box" data-index="2"></div>
@@ -217,7 +241,7 @@
             <div class="key" data-key="L">L</div>
         </div>
         <div class="keyboard-row">
-            <div class="key enter-key">Enter</div>
+            <div class="key enter-key"><img src="enter_icon.svg" class="enter_icon"></div>
             <div class="key" data-key="Z">Z</div>
             <div class="key" data-key="X">X</div>
             <div class="key" data-key="C">C</div>
@@ -232,9 +256,6 @@
     
     
 
-    <script src="script.js">
-
-
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
