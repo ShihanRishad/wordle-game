@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             aniBox.forEach(box => {
                 let position = box.getAttribute('data-index');
                 box.style.animation = "pulse 0.4s";
-                box.style.animationDelay = `${position * 0.5}s`;
+                box.style.animationDelay = `${position * 0.3}s`;
                 box.addEventListener('animationend', removeAnimation);
             });
         }
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const boxes = currentRow.querySelectorAll('.input-box');
 
         if (isLetter) {
-            if (currentIndex < boxes.length) {
+            if (currentIndex < boxes.length - 1) {
                 boxes[currentIndex].textContent = key.toUpperCase();
                 currentIndex++;
                 updateFocus();
@@ -106,8 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (key === 'Enter') {
             if (currentIndex === boxes.length - 1) {
                 checkGuess();
+            } else if (currentIndex <= boxes.length - 1) {
+                salert("Not enough letters!", 1500);
+                animate(currentRow, "shake");
             } else {
-                salert("Not enough letters!", 1500)
+                salert("Too much letter...? If you get it, then it means it's a bug, you can let me know about this bug!", 3500)
+                return;
             }
         }
     }
@@ -134,19 +138,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkGuess() {
-      
         const currentRow = rows[currentRowIndex];
-        
         const boxes = currentRow.querySelectorAll('.input-box');
         let guess = "";
         boxes.forEach(box => guess += box.textContent);
-        
 
         if (guess.length < secretWord.length) {
-            animate(currentRow, "shake");
-            setTimeout(function() {
-                return
-            }, 500)
+            return;
         };
 
         if (!isValidWord(guess)) {
@@ -186,12 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 box.classList.add('absent'); // Incorrect letter
                 updateKeyboardClass(guessArray[index], 'absent');
             }
-        }, (position*0.5)*1000);
+        }, (position*0.3)*1000);
         });
 
-        // Second pass: find partial matches
-        boxes.forEach((box, index) => {
-        });
 
         // Check if the guess is correct
         if (guess === secretWord) {
