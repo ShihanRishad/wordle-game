@@ -20,14 +20,33 @@ document.addEventListener('DOMContentLoaded', () => {
     let secretWord = '';
     var box = document.querySelectorAll(".input-box");
 
-    function animate(row) {
+    function animate(row, extrani) {
         var aniBox = row.querySelectorAll(".input-box");
-
-        aniBox.forEach(box => {
-            let position = box.getAttribute('data-index');
-            box.style.animation = "pulse 0.4s";
-            box.style.animationDelay = `${position * 0.5}s`
-        })
+    
+        // Function to remove animation property
+        function removeAnimation(event) {
+            event.target.style.animation = '';
+            event.target.removeEventListener('animationend', removeAnimation);
+        }
+    
+        if (extrani == "shake") {
+            row.style.animation = "shake 0.5s";
+            row.addEventListener('animationend', removeAnimation);
+        } else if (extrani == "win") {
+            aniBox.forEach(box => {
+                let position = box.getAttribute('data-index');
+                box.style.animation = "win 0.2s";
+                box.style.animationDelay = `${position * 0.1}s`;
+                box.addEventListener('animationend', removeAnimation);
+            });
+        } else if (extrani == "defult") {
+            aniBox.forEach(box => {
+                let position = box.getAttribute('data-index');
+                box.style.animation = "pulse 0.4s";
+                box.style.animationDelay = `${position * 0.5}s`;
+                box.addEventListener('animationend', removeAnimation);
+            });
+        }
     }
 
     function loadWordList() {
@@ -123,14 +142,20 @@ document.addEventListener('DOMContentLoaded', () => {
         boxes.forEach(box => guess += box.textContent);
         
 
-        if (guess.length < secretWord.length) return;
+        if (guess.length < secretWord.length) {
+            animate(currentRow, "shake");
+            setTimeout(function() {
+                return
+            }, 500)
+        };
 
         if (!isValidWord(guess)) {
             salert('Invalid word!', 2900);
+            animate(currentRow, "shake");
             return;
         }
 
-        animate(currentRow);
+        animate(currentRow, "defult");
         const guessArray = guess.split('');
         const secretArray = secretWord.split('');
         const matched = new Array(secretArray.length).fill(false);
@@ -169,30 +194,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Check if the guess is correct
-
         if (guess === secretWord) {
-            if (currentRowIndex == 0) {
-                salert("Genius!", 2900);
-            } else if (currentRowIndex == 1) {
-                salert("Magnificent!", 2900);
-            } else if (currentRowIndex == 2) {
-                salert("impressive", 2900);
-            } else if (currentRowIndex == 3) {
-                salert("splendid", 2900);
-            } else if (currentRowIndex == 4) {
-                salert("great", 2900);
-            } else if (currentRowIndex == 5) {
-                salert("Phew!", 2900);
-            }
-          //  salert("Congratulations! You've guessed the word!", 2900);
-            // Reset or end game logic
+            setTimeout(function() {
+                if (currentRowIndex == 0) {
+                    salert("Genius!", 2900);
+                } else if (currentRowIndex == 1) {
+                    salert("Magnificent!", 2900);
+                } else if (currentRowIndex == 2) {
+                    salert("Impressive!", 2900);
+                } else if (currentRowIndex == 3) {
+                    salert("Splendid!", 2900);
+                } else if (currentRowIndex == 4) {
+                    salert("Great!", 2900);
+                } else if (currentRowIndex == 5) {
+                    salert("Phew!", 2900);
+                }
+                animate(currentRow, "win");
+            }, 2000);
         } else if (currentRowIndex < maxGuesses - 1) {
             currentRowIndex++;
             currentIndex = 0;
             updateFocus();
         } else {
             salert("Game over! The word was " + secretWord, 2900);
-            // Reset or end game logic
         }
     }
 
