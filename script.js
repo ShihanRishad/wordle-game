@@ -19,6 +19,48 @@ document.addEventListener('DOMContentLoaded', () => {
     let wordList = [];
     let secretWord = '';
     var box = document.querySelectorAll(".input-box");
+    var themeBtn = document.querySelector(".themeBtn");
+    var headline = document.querySelector(".headline");
+    var storedTheme = localStorage.getItem("wordleTheme");
+    let devicetheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : 'light-theme';
+
+
+    
+    // Apply the stored theme or default to the device theme
+    if (storedTheme) {
+      applyTheme(storedTheme);
+    } else {
+      applyTheme(devicetheme);
+    }
+    
+    function applyTheme(theme) {
+        if (theme == "dark-theme") {
+            document.querySelectorAll('html *').forEach(function(element) {
+                element.classList.add('dark');
+                document.querySelector(".enter_icon").src = "check_icon-white.svg";
+                document.querySelector(".bsicon").src = "backspace-white.svg";
+            });
+            headline.fill = "white";
+        } else {
+            document.querySelectorAll('.dark').forEach(function(element) {
+                element.classList.remove('dark');
+            });
+            document.querySelector(".enter_icon").src = "check_icon.svg";
+            document.querySelector(".bsicon").src = "backspace.svg";
+            headline.fill = "black";
+        }
+    }
+
+    themeBtn.addEventListener("click", function() {
+        let newTheme;
+        let currentTheme = localStorage.getItem("wordleTheme");
+
+         newTheme = currentTheme === "dark-theme" ? "light-theme" : "dark-theme";
+         // Update the theme preference in localStorage
+         localStorage.setItem("wordleTheme", newTheme); 
+         // Apply the new theme
+         applyTheme(newTheme);
+    });
 
     function animate(row, extrani) {
         var aniBox = row.querySelectorAll(".input-box");
