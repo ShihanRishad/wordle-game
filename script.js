@@ -21,17 +21,25 @@ document.addEventListener('DOMContentLoaded', () => {
     var box = document.querySelectorAll(".input-box");
     var themeBtn = document.querySelector(".themeBtn");
     var headline = document.querySelector(".headline");
-    var storedTheme = localStorage.getItem("wordleTheme");
     let devicetheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : 'light-theme';
-
-
+    let nowTheme;
+    let type = typeof(Storage);
+    decideTheme()
     
-    // Apply the stored theme or default to the device theme
-    if (storedTheme) {
-      applyTheme(storedTheme);
+function decideTheme() {
+    if (type == 'function') {
+        var storedTheme = localStorage.getItem("wordleTheme");
+        if (storedTheme) {
+            applyTheme(storedTheme);
+        } else {
+            applyTheme(devicetheme);
+        }
+        console.log("Your browser supports localStorage. Applying your prefered theme...")
     } else {
-      applyTheme(devicetheme);
+        applyTheme(devicetheme);
+        console.log("Sorry, your browser doesn't support localStorage. Let's try changing theme another way. 😀")
     }
+}
     
     function applyTheme(theme) {
         if (theme == "dark-theme") {
@@ -41,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector(".bsicon").src = "backspace-white.svg";
             });
             headline.fill = "white";
+            nowTheme = "dark-theme";
         } else {
             document.querySelectorAll('.dark').forEach(function(element) {
                 element.classList.remove('dark');
@@ -48,10 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector(".enter_icon").src = "check_icon.svg";
             document.querySelector(".bsicon").src = "backspace.svg";
             headline.fill = "black";
+            nowTheme = "dark-theme";
         }
     }
-
+    
     themeBtn.addEventListener("click", function() {
+        if (type == 'function') {
         let newTheme;
         let currentTheme = localStorage.getItem("wordleTheme");
 
@@ -60,7 +71,13 @@ document.addEventListener('DOMContentLoaded', () => {
          localStorage.setItem("wordleTheme", newTheme); 
          // Apply the new theme
          applyTheme(newTheme);
-    });
+        } else {
+            let newTheme;
+            newTheme = nowTheme === "dark-theme" ? "light-theme" : "dark-theme";
+            applyTheme(newTheme);
+        }
+
+        });
 
     function animate(row, extrani) {
         var aniBox = row.querySelectorAll(".input-box");
