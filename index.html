@@ -7,358 +7,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordle Game</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            overflow-x: hidden;
-            transition: background-color 0.4s, color 0.4s;
-        }
-
-
-        body.dark {
-            background-color: black;
-            color: white;
-        }
-
-        
-        .input-container {
-            display: flex;
-            gap: 10px;
-            flex-direction: column;
-            margin-bottom: 20px;
-            margin-top: 30px;
-            font-family: "Roboto", Arial, sans-serif;
-            font-weight: 500;
-            font-style: normal;
-        }
-
-        .input-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 0px;
-        }
-        .input-box {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            box-shadow: 0 0 3px 0 rgb(0, 0, 0);
-            border-radius: 10px;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            background-color: white;
-            transition: scale 0.1s, box-shadow 0.1s, height 0.2s, width 0.2s, background-color 0.4s, font-size 0.2s;
-        }
-        .input-box.focused {
-            scale: 1.1;
-            box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.685);
-        }
-
-        .input-box.focused.dark {
-            box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.685);
-        }
-
-        .input-box.dark {
-            background-color: #2f2f2f;
-            box-shadow: 0 0 3px 0 #ffffff;
-        }
-        .keyboard {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 606px;
-            min-width: 335px;
-        }
-        .keyboard-row {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-        .key {
-            width: 8.5%;
-            height: 52px;
-            margin: 5px 2px;
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #ccc;
-            border-radius: 7px;
-            cursor: pointer;
-            user-select: none;
-            font-size: 18px;
-            transition: background-color 0.1s, scale 0.1s;
-        }
-
-        .key.dark {
-            background-color: #2f2f2f;
-        }
-        .key:active {
-            background-color: #bbb;
-            scale: 0.9;
-        }
-
-        .key.dark:active {
-            background-color: #444444;
-        }
-        .key.wide {
-            width: 60px;
-        }
-
-        .hid {
-            display: none;
-        }
-
-        .bsicon {
-            height: 50%;
-            width: 50%;        
-        }
-
-        .salert {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            translate: -50%;
-            padding: 15px;
-            background-color: rgba(0, 0, 0, 0.603);
-            color: white;
-            border-radius: 200px;
-            opacity: 0;
-            z-index: 10;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-
-        .salert.dark {
-            background-color: rgba(184, 184, 184, 0.418);
-        }
-        
-        .input-box.correct {
-            background-color: #33912a;
-            color: white;
-        }
-        
-        .input-box.present {
-            background-color: #dabe00;
-            color: white;
-        }
-        
-        .input-box.absent {
-            background-color: #787c7e;
-            color: white;
-        }
-
-
-
-        .input-box.correct.dark {
-            background-color: #227a1a;
-            color: white;
-        }        
-
-        .input-box.present.dark {
-            background-color: #b89f00;
-            color: white;
-        }
-        
-        .input-box.absent.dark {
-            background-color: #40484d;
-            color: white;
-        }
-
-
-
-        
-        .key.correct {
-            background-color: #33912a;
-            color: white;
-        }
-
-        .key.present {
-            background-color: #dabe00;
-            color: white;
-        }
-        
-        .key.absent {
-            background-color: #787c7e;
-            color: white;
-        }
-
-
-
-        .key.correct.dark {
-            background-color: #227a1a;
-            color: white;
-        }
-
-        .key.present.dark {
-            background-color: #b89f00;
-            color: white;
-        }
-        
-        .key.absent.dark {
-            background-color: #40484d;
-            color: white;
-        }
-
-        @keyframes pulse {
-            0% {
-                scale: 1;
-            }
-             50% {
-                scale: 1.2;
-                box-shadow: 0 0 7px 2px rgba(0, 0, 0, 0.664);
-            }
-            100% {
-                scale: 1;
-            }
-        }
-
-        @keyframes shake {
-            0% {
-                translate: 0% 0;
-            }
-            20% {
-                translate: 10% 0;
-            }
-            40% {
-                translate: -10% 0;
-            }
-            60% {
-                translate: 10% 0;
-            }
-            80% {
-                translate: -10% 0;
-            }
-            100% {
-                translate: 0% 0;
-            }
-        }
-
-
-        @keyframes win {
-            0% {
-                translate: 0 0%;
-            } 
-            50% {
-                translate: 0 -40%;
-            }
-            100% {
-                translate: 0 0%;
-            }
-        }
-
-        .enter_icon {
-            height: 50%;
-        }
-
-        .top-part {
-            height: 61px;
-            width: 95vw;
-            margin: 12px;
-            position: relative;
-            border-radius: 48px;
-            box-shadow: 0px 2px 11px 0 #00000094;
-            background-color: #c4dfb7;
-            
-        }
-
-        .top-part.dark {
-            background-color: #113b3a;
-            box-shadow: 0px 2px 11px 0 #ffffff94;
-        }
-
-
-
-        .left {
-            max-width: 30%;
-            margin-bottom: 20px;
-        }
-
-        .buttonBox {
-            margin-left: 6px;
-            margin-top: 5px;
-        }
-
-        .btn {
-            background-color: transparent;
-            height: 51px;
-            width: 50px;
-            background: transparent;
-            border-radius: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color  0.3s;
-            
-        }
-
-        .btn:hover {
-            background-color: #79797959;
-        }
-
-        .header {
-            position: absolute;
-            left: 50%;
-            top: 14px;
-            translate: -50% 0;
-            width: 100px;
-            height: 50px;
-            width: 159px;
-            text-align: center;
-
-        }
-
-        .h1 {
-            height: 42px;
-            width: 100%;
-        }
-
-        .headline.dark {
-            fill: white;
-        }
-
-        .headline {
-            fill: black;
-            transition: all 0.4s;
-        }
-
-        .themeIcon.dark {
-            fill: white;
-        }
-
-        .themeIcon {
-            fill: black;
-            transition: fill 0.4s;
-        }
-
-        @keyframes flip {
-            0% {
-                transform: scaleY(1);
-            }
-            50% {
-                transform: scaleY(0);
-            }
-            100% {
-                transform: scaleY(1);
-            }
-        }
-
-
-
-
-        
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+    <div class="back"></div>
+    <div class="popup" id="popup">
+        <h2>What is Wordle?</h2>
+        <p id="p">Wordle is a word game where you have to guess a five-letter word in six tries. Each guess must be a valid five-letter word. After each guess, the color of the tiles will change to show how close your guess was to the word.</p><br>      <h2>How to Play</h2>
+        <p>1. Enter a five-letter word and press <img src="check_icon.svg" class="enter_icon-t" alt="enter">.<br>
+           2. The tiles will change color to give you hints:<br>
+           - Green: Correct letter in the correct spot.<br>
+           - Yellow: Correct letter in the wrong spot.<br>
+           - Gray: Letter is not in the word.<br>
+           3. Use these hints to guess the word within six tries.</p>
+      <br><br>
+      <div class="example">
+        <h2>
+          Examples
+        </h2>
+        <div class="row">
+          <div class="box green">W</div>
+          <div class="box">E</div>
+          <div class="box">A</div>
+          <div class="box">R</div>
+          <div class="box">Y</div>
+        </div>
+        <p>
+    W is in the word and in the correct spot.
+        </p>
+        <br>
+         <div class="row">
+          <div class="box">P</div>
+          <div class="box yellow">I</div>
+          <div class="box">L</div>
+          <div class="box">L</div>
+          <div class="box">S</div>
+        </div>
+        <p>
+         I is in the word but in the wrong spot.
+        </p>
+      <br>
+        <div class="row">
+          <div class="box">V</div>
+          <div class="box">A</div>
+          <div class="box">G</div>
+          <div class="box grey">U</div>
+          <div class="box">E</div>
+        </div>
+        <p>
+          W is in the word and in the correct spot.
+        </p>
+      </div>
+      <button class="start">Play!</button>
+    </div>
     <div class="salert">Defult Text</div>
     <div class="top-part">
         <div class="left">
@@ -371,17 +72,14 @@
         <div class="center">
             <div class="header">
                 <div class="h1">
-                    <svg class="headline" height="80%" version="1.1" viewBox="0 0 423.56 105.83" xmlns="http://www.w3.org/2000/svg">
-                        <g transform="translate(289.45 42.303)">
-                         <g stroke-width="3.7108">
-                          <path d="m-162.84-42.303v18.406h-5.9374l-16.921 85.646h-27.906l-12.765-55.366-13.359 55.366h-28.054l-15.734-85.646h-5.9374v-18.406h42.452v18.406h-7.5701l7.867 53.139 16.773-71.545h18.851l15.289 71.545 9.3513-53.139h-8.0154v-18.406z"/>
-                          <path d="m-133.82-10.984q15.289 0 23.304 9.3513 8.1639 9.2029 8.1639 28.054 0 37.109-31.468 37.109t-31.468-37.109q0-18.703 8.1639-28.054 8.1639-9.3513 23.304-9.3513zm-5.9374 52.546q1.3359 4.453 5.9374 4.453t5.7889-4.453q1.3359-4.6015 1.3359-15.437 0-11.133-1.4843-15.289-1.3359-4.3046-5.6405-4.3046t-5.7889 4.3046q-1.4843 4.3046-1.4843 15.289 0 10.836 1.3359 15.437z"/>
-                          <path d="m-46.019-10.241v21.226q-11.429-0.4453-15.734 3.7109-4.3046 4.1562-4.3046 15.882v14.695h7.867v16.476h-37.851v-16.476h6.2342v-37.999h-6.2342v-16.476h28.648l-0.14843 11.429q3.1171-5.7889 8.3123-9.0545 5.1952-3.414 11.578-3.414z"/>
-                          <path d="m25.749 45.273v16.476h-29.984v-8.0154q-1.4843 3.8593-6.0858 6.6795-4.453 2.8202-9.7966 2.8202-5.0468 0-8.7576-1.6328t-6.828-5.6405q-2.9687-4.1562-4.6015-11.875-1.6328-7.7186-1.6328-19 0-20.335 5.7889-28.054 5.9374-7.7186 16.031-7.7186 10.836 0 15.882 9.6482v-24.788h-7.1248v-16.476h31.023v87.576zm-36.366 0.14843q4.6015 0 5.7889-4.1562 1.3359-4.3046 1.3359-14.843 0-10.836-1.4843-14.843-1.3359-4.1562-5.4921-4.1562-4.3046 0-5.7889 4.1562-1.3359 4.0077-1.3359 14.843 0 3.7108 0 5.7889 0.14843 1.9296 0.29687 4.6015 0.14843 2.5234 0.59374 3.8593 0.4453 1.1875 1.1875 2.5234 0.74217 1.1875 1.9296 1.7812 1.3359 0.4453 2.9687 0.4453z"/>
-                          <path d="m68.423 45.273v16.476h-36.218v-16.476h6.0858v-71.1h-6.6795v-16.476h30.577v87.576z"/>
-                          <path d="m81.263-1.9291q8.906-9.0545 22.71-9.0545 13.804 0 21.968 9.0545 8.1639 9.0545 8.1639 28.648 0 2.3749-0.29687 5.9374h-37.109q0 8.3123 1.9296 11.726 1.9296 3.2655 6.3827 3.2655 6.5311 0 8.4607-7.867h20.187q-5.6405 23.749-28.796 23.749-15.882 0-24.195-8.3123-8.1639-8.3123-8.1639-28.945 0-19.296 8.7576-28.202zm15.289 23.749h14.695v-1.9296q0-7.2733-1.4843-10.836-1.4843-3.7109-5.7889-3.7109-1.7812 0-3.1171 0.59374-1.1875 0.4453-2.0781 1.7812-0.74217 1.3359-1.1875 2.5234-0.4453 1.039-0.74217 3.5624-0.14843 2.3749-0.29687 3.7109 0 1.1875 0 4.3046z"/>
-                         </g>
-                        </g>
+                    <svg class="headline" height="80%" version="1.1" viewBox="0 0 524 116" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M136.905 0.00390625V20.1773H130.485L112.188 114.047H82.0127L68.2097 53.3649L53.7645 114.047H23.4294L6.41609 20.1773H-0.00408936V0.00390625H45.8997V20.1773H37.7141L46.2208 78.419L64.3576 0.00390625H84.7414L101.274 78.419L111.385 20.1773H102.718V0.00390625H136.905Z"/>
+                        <path d="M168.284 34.3303C179.306 34.3303 187.705 37.7467 193.483 44.5796C199.368 51.304 202.311 61.5533 202.311 75.3274C202.311 102.442 190.969 116 168.284 116C145.6 116 134.258 102.442 134.258 75.3274C134.258 61.6615 137.2 51.4122 143.085 44.5796C148.97 37.7467 157.37 34.3303 168.284 34.3303ZM161.864 91.922C162.827 95.1757 164.967 96.8026 168.284 96.8026C171.602 96.8026 173.688 95.1757 174.544 91.922C175.507 88.5598 175.989 82.92 175.989 75.0027C175.989 66.868 175.454 61.2823 174.384 58.2456C173.421 55.1003 171.387 53.5276 168.284 53.5276C165.181 53.5276 163.095 55.1003 162.025 58.2456C160.955 61.3909 160.42 66.9766 160.42 75.0027C160.42 82.9204 160.901 88.5601 161.864 91.922Z"/>
+                        <path d="M263.225 35.1446V58.4088C254.986 58.0834 249.315 59.4392 246.211 62.476C243.108 65.5129 241.557 71.3152 241.557 79.8831V95.9892H250.063V114.047H209.135V95.9892H215.876V54.3413H209.135V36.2832H240.112L239.951 48.8097C242.199 44.5798 245.195 41.2719 248.94 38.8857C252.685 36.3912 256.858 35.1439 261.459 35.1439L263.225 35.1446Z"/>
+                        <path d="M340.828 95.9893V114.047H308.406V105.262C307.336 108.082 305.143 110.523 301.825 112.583C298.615 114.644 295.084 115.674 291.232 115.674C287.594 115.674 284.438 115.078 281.763 113.885C279.088 112.692 276.626 110.631 274.379 107.702C272.239 104.666 270.581 100.327 269.404 94.6872C268.227 89.0473 267.638 82.1059 267.638 73.8627C267.638 59.0043 269.725 48.755 273.898 43.1149C278.178 37.475 283.956 34.6551 291.232 34.6551C299.044 34.6551 304.768 38.18 308.406 45.2298V18.0615H300.702V0.00341797H334.247V95.9888L340.828 95.9893ZM301.505 96.1519C304.822 96.1519 306.909 94.6335 307.765 91.5967C308.728 88.4514 309.209 83.0286 309.209 75.3284C309.209 67.4107 308.674 61.9879 307.604 59.0601C306.641 56.0232 304.662 54.5048 301.666 54.5048C298.563 54.5048 296.476 56.0232 295.406 59.0601C294.443 61.9884 293.961 67.4112 293.961 75.3284C293.961 78.0398 293.961 80.1547 293.961 81.6731C294.068 83.0831 294.175 84.7642 294.282 86.7165C294.389 88.5603 294.603 89.9703 294.925 90.9464C295.246 91.8141 295.674 92.736 296.209 93.7121C296.744 94.5798 297.439 95.2305 298.295 95.6643C299.258 95.9897 300.328 96.1519 301.505 96.1519Z"/>
+                        <path d="M386.972 95.9893V114.047H347.809V95.9893H354.39V18.062H347.167V0.00390625H380.23V95.9893H386.972Z"/>
+                        <path d="M400.856 44.2546C407.276 37.6387 415.462 34.3307 425.413 34.3307C435.363 34.3307 443.282 37.6387 449.167 44.2546C455.052 50.8706 457.994 61.3369 457.994 75.6535C457.994 77.3888 457.887 79.558 457.673 82.1611H417.547C417.547 88.2347 418.243 92.5187 419.634 95.0131C421.025 97.3991 423.325 98.5921 426.535 98.5921C431.243 98.5921 434.293 95.718 435.684 89.9697H457.512C453.446 107.323 443.067 115.999 426.375 115.999C414.926 115.999 406.205 112.962 400.213 106.889C394.327 100.815 391.385 90.2402 391.385 75.1643C391.385 61.065 394.541 50.7617 400.855 44.2542L400.856 44.2546ZM417.388 70.2841H433.278V68.1692C433.278 62.8548 432.743 58.8959 431.673 56.2927C430.603 53.5812 428.516 52.2255 425.413 52.2255C424.129 52.2255 423.006 52.4424 422.043 52.8762C421.187 53.2016 420.438 53.8523 419.796 54.8285C419.261 55.8046 418.833 56.7265 418.512 57.5942C418.191 58.3534 417.923 59.6548 417.709 61.4986C417.602 63.2339 417.495 64.5897 417.388 65.5659C417.388 66.4336 417.388 68.0065 417.388 70.2841Z"/>
+                        <path d="M523.09 37.0007V60.2649C514.851 59.9395 509.18 61.2952 506.077 64.3321C502.974 67.369 501.422 73.1713 501.422 81.7392V97.8452H509.929V115.903H469V97.8452H475.741V56.1974H469V38.1393H499.977L499.817 50.6658C502.064 46.4359 505.06 43.1279 508.805 40.7418C512.55 38.2473 516.723 37 521.324 37L523.09 37.0007Z"/>                        
                        </svg>
                        
                 </div>
