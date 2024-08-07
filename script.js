@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     pop.style.animation = "goOut 0.3s";
     pop.addEventListener('animationend', function() {
         pop.style.display = "none";
+        document.querySelector(".back").style.display = "none";
     })
   }
   document.querySelector(".start").addEventListener("click", popupHide);
