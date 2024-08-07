@@ -78,7 +78,7 @@ decideTheme()
     }
     
     themeBtn.addEventListener("click", function() {
-        if (type == 'object') {
+        if (isLocalStorageAvailable()) {
         let newTheme;
         let currentTheme = localStorage.getItem("wordleTheme");
 
