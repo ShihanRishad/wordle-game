@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
           console.log("Your browser supports localStorage. Applying your prefered theme...")
   } else {
       applyTheme(devicetheme);
-      console.log("Sorry, your browser doesn't support localStorage. Let's try changing another way. 😀")
+     // console.log("Sorry, your browser doesn't support localStorage. Let's try changing another way. 😀")
   }
 }
 
