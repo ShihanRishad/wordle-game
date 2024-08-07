@@ -83,7 +83,7 @@ decideTheme()
             document.querySelector(".enter_icon").src = "check_icon.svg";
             document.querySelector(".bsicon").src = "backspace.svg";
             headline.fill = "black";
-            nowTheme = "dark-theme";
+            nowTheme = "light-theme";
             document.querySelector(".enter_icon-t").src = "check_icon.svg";
         }
     }
@@ -91,9 +91,9 @@ decideTheme()
     themeBtn.addEventListener("click", function() {
         if (isLocalStorageAvailable()) {
         let newTheme;
-        let currentTheme = localStorage.getItem("wordleTheme");
+      //  let currentTheme = localStorage.getItem("wordleTheme");
 
-         newTheme = currentTheme === "dark-theme" ? "light-theme" : "dark-theme";
+         newTheme = nowTheme === "dark-theme" ? "light-theme" : "dark-theme";
          // Update the theme preference in localStorage
          localStorage.setItem("wordleTheme", newTheme); 
          // Apply the new theme
