@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 decideTheme()
     
     function applyTheme(theme) {
-        if (theme == "dark-theme") {
+        if (theme == "dark-theme") { // Dark theme
             document.querySelectorAll('html *').forEach(function(element) {
                 element.classList.add('dark');
                 document.querySelector(".enter_icon").src = "check_icon-white.svg";
@@ -75,7 +75,8 @@ decideTheme()
             });
             headline.fill = "white";
             nowTheme = "dark-theme";
-        } else {
+            document.querySelector(".enter_icon-t").src = "check_icon-white.svg";
+        } else { //Light theme
             document.querySelectorAll('.dark').forEach(function(element) {
                 element.classList.remove('dark');
             });
@@ -83,6 +84,7 @@ decideTheme()
             document.querySelector(".bsicon").src = "backspace.svg";
             headline.fill = "black";
             nowTheme = "dark-theme";
+            document.querySelector(".enter_icon-t").src = "check_icon.svg";
         }
     }
     
