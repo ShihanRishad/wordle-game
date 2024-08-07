@@ -117,7 +117,7 @@ decideTheme()
         } else if (extrani == "defult") {
             aniBox.forEach(box => {
                 let position = box.getAttribute('data-index');
-                box.style.animation = "flip 0.4s";
+                box.style.animation = "flip 0.5s";
                 box.style.animationDelay = `${position * 0.3}s`;
                 box.addEventListener('animationend', removeAnimation);
             });
