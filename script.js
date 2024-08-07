@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var headline = document.querySelector(".headline");
     let devicetheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : 'light-theme';
     let nowTheme;
-    let type = typeof(localStorage);;
+    let type = typeof(localStorage);
     decideTheme()
     
 function decideTheme() {
