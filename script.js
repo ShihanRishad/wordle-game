@@ -23,23 +23,39 @@ document.addEventListener('DOMContentLoaded', () => {
     var headline = document.querySelector(".headline");
     let devicetheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : 'light-theme';
     let nowTheme;
-    let type = typeof(localStorage);
-    decideTheme()
-    
-function decideTheme() {
-    if (type == 'object') {
-        var storedTheme = localStorage.getItem("wordleTheme");
-        if (storedTheme) {
-            applyTheme(storedTheme);
-        } else {
-            applyTheme(devicetheme);
-        }
-        console.log("Your browser supports localStorage. Applying your prefered theme...")
-    } else {
-        applyTheme(devicetheme);
-        console.log("Sorry, your browser doesn't support localStorage. Let's try changing theme another way. 😀")
-    }
+  //  let type = typeof(localStorage);
+  
+  
+  function isLocalStorageAvailable() {
+    try {
+        var test = "__storage_test__";
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
+      } catch (e) {
+          return false;
+      }
+  }
+  
+  
+  // Apply the stored theme or default to the device theme
+  
+  function decideTheme() {
+      if (isLocalStorageAvailable()) {
+          var storedTheme = localStorage.getItem("wordleTheme");
+          if (storedTheme) {
+              applyTheme(storedTheme);
+          } else {
+              applyTheme(devicetheme);
+          }
+          console.log("Your browser supports localStorage. Applying your prefered theme...")
+  } else {
+      applyTheme(devicetheme);
+      console.log("Sorry, your browser doesn't support localStorage. Let's try changing another way. 😀")
+  }
 }
+
+decideTheme()
     
     function applyTheme(theme) {
         if (theme == "dark-theme") {
