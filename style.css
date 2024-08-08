@@ -120,7 +120,7 @@ body.dark {
     left: 50%;
     translate: -50%;
     padding: 15px;
-    background-color: rgba(75, 75, 75, 0.863);
+    background-color: rgba(34, 34, 34, 0.836);
     color: white;
     border-radius: 200px;
     opacity: 0;
@@ -130,7 +130,8 @@ body.dark {
 }
 
 .salert.dark {
-    background-color: rgba(105, 105, 105, 0.418);
+    background-color: rgba(201, 201, 201, 0.849);
+    color: black;
 }
 
 .input-box.correct {
