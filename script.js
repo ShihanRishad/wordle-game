@@ -24,6 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let devicetheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-theme' : 'light-theme';
     let nowTheme;
   //  let type = typeof(localStorage);
+
+  function setClass(element, name, position) {
+    setTimeout(function() {    
+        element.classList.add(name);
+    }, (position * 0.3) * 1000);
+  }
   
   function popupHide() {
     var pop = document.querySelector(".popup");
@@ -223,11 +229,15 @@ decideTheme()
         }
     }
 
+    let boxClass;
     function checkGuess() {
+      
         const currentRow = rows[currentRowIndex];
+        
         const boxes = currentRow.querySelectorAll('.input-box');
         let guess = "";
         boxes.forEach(box => guess += box.textContent);
+        
 
         if (guess.length < secretWord.length) {
             return;
@@ -243,35 +253,49 @@ decideTheme()
         const guessArray = guess.split('');
         const secretArray = secretWord.split('');
         const matched = new Array(secretArray.length).fill(false);
+        const guessMatches = new Array(guessArray.length).fill(false);
 
-        // Find exact matches first
-        boxes.forEach((box, index) => {
-            let position = box.getAttribute('data-index');
-            setTimeout(function() {
-            if (guessArray[index] === secretArray[index]) {
-                box.classList.add('correct'); // Correct letter in the correct position
-                matched[index] = true;
-                guessArray[index] = null; // Mark this letter as matched
-                updateKeyboardClass(secretArray[index], 'correct');
-            }
 
-            // Find other matches after
-            if (!box.classList.contains('correct') && guessArray[index] !== null) {
-                const letterIndex = secretArray.indexOf(guessArray[index]);
-                if (letterIndex !== -1 && !matched[letterIndex]) {
-                    box.classList.add('present'); // Correct letter in the wrong position
-                    matched[letterIndex] = true;
-                    updateKeyboardClass(guessArray[index], 'present');
-                } else {
-                    box.classList.add('absent'); // Incorrect letter
-                    updateKeyboardClass(guessArray[index], 'absent');
-                }
-            } else if (!box.classList.contains('correct')) {
-                box.classList.add('absent'); // Incorrect letter
-                updateKeyboardClass(guessArray[index], 'absent');
-            }
-        }, (position*0.3)*1000);
-        });
+                    // First pass: find exact matches
+                    boxes.forEach((box, index) => {
+                        let position = box.getAttribute('data-index');
+                        if (guessArray[index] === secretArray[index]) {
+                            setClass(box, "correct", position);
+                            boxClass = "correct";
+                            matched[index] = true;
+                            guessMatches[index] = true;
+                            updateKeyboardClass(secretArray[index], 'correct');
+                        }
+                    });
+                    
+                    // Second pass: find partial matches
+                    boxes.forEach((box, index) => {
+                        let position = box.getAttribute('data-index');
+                        if (!guessMatches[index] && guessArray[index] !== null) {
+                            // Find the first unmatched occurrence in secretArray
+                            for (let i = 0; i < secretArray.length; i++) {
+                                if (guessArray[index] === secretArray[i] && !matched[i]) {
+                                    setClass(box, "present", position);
+                                    boxClass = "present";
+                                    matched[i] = true;
+                                    guessMatches[index] = true;
+                                    updateKeyboardClass(guessArray[index], 'present');
+                                    break;
+                                }
+                            }
+                            // If no match found, mark as absent
+                            if (!guessMatches[index]) { 
+                                    setClass(box, "absent", position);
+                                    boxClass = "absent";   
+
+                                updateKeyboardClass(guessArray[index], 'absent');
+                            }
+                        } else if (!boxClass == 'correct') {
+                            setClass(box, "absent", position);
+                            boxClass = "absent";                  
+                            updateKeyboardClass(guessArray[index], 'absent');
+                        }
+                    });
 
 
         // Check if the guess is correct
@@ -299,7 +323,7 @@ decideTheme()
         } else {
             salert("Game over! The word was " + secretWord, 2900);
         }
-    }
+    } 
 
     rows.forEach((row, rowIndex) => {
         const boxes = row.querySelectorAll('.input-box');
