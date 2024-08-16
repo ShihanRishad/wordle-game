@@ -1,12 +1,17 @@
 # Wordler 🟢🟡⚪
 
 Wordler is a recreation of the popular word-guessing game, Wordle. This project aims to provide a fun and challenging experience for players who enjoy word puzzles.
-
-<img src="wordle-icon.svg" style="width:30%" align="center">
+<div style="width:100%;display:flex;justify-content:center;align-items:center;">
+<img src="wordle-icon.svg" style="width:30%;box-shadow:0 0 6px 0 white; border-radius:20px;padding:0px">
+</div>
 
 ## 🚀 Introduction 
 
 Wordler is a word-guessing game where players have six attempts to guess a hidden five-letter word. After each guess, the game provides feedback on which letters are correct and in the correct position, and which letters are correct but in the wrong position.
+<div style="width:100%;display:flex;justify-content:center;align-items:center;flex-direction:column">
+<img src="screenshot.png" alt="screenshot" width="500px" style="border-radius:20px;overflow:hidden;margin-bottom:10px">
+<i>Screenshot</i>
+</div>
 
 🟨⬜⬜🟨🟨
 ## ⚡ Features
@@ -58,8 +63,8 @@ This project is licensed under the MIT License. See the LICENSE file for details
 - Looks for the user to press a letter on the keyboard.
 - Writes that letter to the focused box/tile.
 - Switches focus to the next box
-- If ```backspace``` is pressed, switch the focus to the privous box, and remove the letter in it.
-- If the key is enter, it checks and gives feedback, and goes to the next row.
+- If `backspace` is pressed, switch the focus to the privous box, and remove the letter in it.
+- If the key is `enter`, it checks and gives feedback, and goes to the next row.
 
 ### Color feadback
 - For giving feedback (Green, Yellow, and Grey), first it checks for exact matches, the correct letter in the correct place, and makes the box green.
