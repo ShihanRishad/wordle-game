@@ -9,7 +9,7 @@ Wordler is a recreation of the popular word-guessing game, Wordle. This project 
 
 Wordler is a word-guessing game where players have six attempts to guess a hidden five-letter word. After each guess, the game provides feedback on which letters are correct and in the correct position, and which letters are correct but in the wrong position.
 <div style="width:100%;display:flex;justify-content:center;align-items:center;flex-direction:column">
-<img src="screenshot.png" alt="screenshot" width="500px" style="border-radius:20px;overflow:hidden;margin-bottom:10px">
+<img src="screenshot.png" alt="screenshot" width="500px" style="border-radius:20px;overflow:hidden;margin-bottom:10px"><br>
 <i>Screenshot</i>
 </div>
 
