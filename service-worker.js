@@ -5,7 +5,8 @@ const urlsToCache = [
   './styles.css',
   './main.js',
   './icons/manifest-icon-192.maskable.png',
-  './icons/manifest-icon-512.maskable.png'
+  './icons/manifest-icon-512.maskable.png',
+  './wordlist.txt'
 ];
 
 self.addEventListener('install', event => {
