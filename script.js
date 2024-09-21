@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/Stopwatch/service-worker.js').then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, error => {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+        });
+      }
     salertThing = document.querySelector(".salert");
     function salert(Thing, waittime) {
         salertThing.style.opacity = "1";
