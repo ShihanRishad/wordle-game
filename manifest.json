@@ -1,0 +1,28 @@
+{
+    "name": "Wordler",
+    "short_name": "Wordler",
+    "description": "Wordler : Recreation or wordle game",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#f0f0f0",
+    "theme_color": "#000000",
+    "scope": "/Stopwatch/",
+    "icons": [
+
+    ],
+    "shortcuts": [
+      {
+        "name": "Open Home",
+        "short_name": "Home",
+        "description": "Go to the home page",
+        "url": "/Stopwatch/",
+        "icons": [
+          {
+            "src": "/Stopwatch/images/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+          }
+        ]
+      }
+    ]
+  }
